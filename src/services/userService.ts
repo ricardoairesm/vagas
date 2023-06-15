@@ -28,7 +28,7 @@ async function deleteUserFromDb(user: User){
     return erasedUser;
 }
 
-async function updateUserInformation(id: number, user: User){
+async function updateUserInformation(user: User){
     const userExists = userRepository.getUserById(user.id);
     if (!userExists) throw notFoundError();
     const updatedUser = userRepository.updateUser(user);

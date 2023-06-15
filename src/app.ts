@@ -1,5 +1,7 @@
 import express from 'express';
-import { getUserByName, getAllUsers, postUser, deleteUser, updateUser } from './controllers/usersController'
+import { getUserByName, getAllUsers, postUser, deleteUser, updateUser } from './controllers/usersController';
+import { handleApplicationErrors } from './middlewares/error-handling-middleware';
+
 var app = express();
 app.use(express.json());
 app.use(express.urlencoded());
@@ -13,12 +15,13 @@ app.get('/', function(req, res){
   `);
 });
 
-app.get("/user", getUserByName);
-app.get("/users", getAllUsers);
-app.post("/users", postUser)
-app.delete("/users", deleteUser)
-app.put("/users", updateUser)
-app.get("/users/access",);
+app.get("/user", getUserByName)
+.get("/users", getAllUsers)
+.post("/users", postUser)
+.delete("/users", deleteUser)
+.put("/users", updateUser)
+.get("/users/access",)
+.use(handleApplicationErrors);
 
 
 const port  = 3000;

@@ -1,5 +1,20 @@
-import { fakeData } from "../../../fakeData.js";
 import { User, UserInput } from "../../types/users";
+
+const fakeData = [
+    {
+        id: 1,
+        name: "João Oliveira",
+        job: "Desenvolvedor"
+    }
+]
+
+const fakeSession = [
+    {
+        userId:1,
+        token:'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxIn0.1ZBc33kR6QU2rjm2rqNe-Lba-qW0NAaXPh2MzKdLl1U',
+    }
+]
+
 async function getUserByName(name: string) {
     const user = fakeData.find((user: User) => user.name === name);
     return (user);
@@ -31,19 +46,13 @@ async function deleteUser(name: string) {
     return (user);
 }
 
-async function updateUser(user: User) {
-    const userExists = fakeData.find((user: User) => user.id === user.id);
-    const updatedUser = {
-        id: fakeData.length + 1,
-        name: user.name,
-        job: user.job,
-    };
+async function updateUser(updatedUserInformation: User) {
+    const userExists = fakeData.find((user: User) => user.id === updatedUserInformation.id);
     if (userExists) {
         const index = fakeData.indexOf(userExists);
-        fakeData[index] = updatedUser;
+        fakeData[index] = updatedUserInformation;
     };
-
-    return updatedUser;
+    return updatedUserInformation;
 }
 
 const userRepository = {

@@ -8,3 +8,8 @@ export type UserInput = {
     name:string;
     job: string;
 }
+
+export type ApplicationError = {
+    name: string;
+    message: string;
+  };
