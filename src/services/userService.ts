@@ -1,7 +1,7 @@
-import userRepository from "../repositories/user-repository";
-import { notFoundError } from "../errors/not-found-error";
-import { duplicatedNameError } from "../errors/duplicated-name-error";
-import { User, UserInput } from "../types/users";
+import userRepository from '../repositories/user-repository/index.ts';
+import { notFoundError } from "../errors/not-found-error.ts";
+import { duplicatedNameError } from "../errors/duplicated-name-error.ts";
+import { User, UserInput } from "../types/users.ts";
 
 async function findUserByName(name: string) {
     const user = await userRepository.getUserByName(name);

@@ -1,4 +1,4 @@
-import { User, UserInput } from "../../types/users";
+import { User, UserInput } from "../../types/users.ts";
 
 const fakeData = [
     {

@@ -1,20 +1,35 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
-    "esModuleInterop": true,
-    "target": "ESNext",
-    "moduleResolution": "Node",
+    "target": "es2020",
+    "module": "NodeNext",
     "outDir": "dist",
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "isolatedModules": false,
-    "strict": true,
     "noImplicitAny": true,
-    "useUnknownInCatchVariables": false,
-    "inlineSourceMap": true
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "rootDirs": [
+      "src",
+      "tests"
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "@/*": [
+        "*"
+      ]
+    },
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      }
+    ]
   },
+  "include": [
+    "src",
+    "tests"
+  ],
   "ts-node": {
-      "esm": true
-  },
-  "lib": ["esnext"]
+    "esm": true,
+  }
 }

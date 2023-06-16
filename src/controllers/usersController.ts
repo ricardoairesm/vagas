@@ -1,8 +1,8 @@
-import userService from "../services/userService";
+import userService from "../services/userService.ts";
 import { NextFunction, Request, Response } from "express";
-import { User, UserInput } from "../types/users";
+import { User, UserInput } from "../types/users.ts";
 import httpStatus from 'http-status'
-import { AuthenticatedRequest } from "../middlewares/authenticationMiddleware";
+import { AuthenticatedRequest } from "../middlewares/authenticationMiddleware.ts";
 
 export async function getUserByName(req: Request, res: Response, next: NextFunction) {
     const name = req.query.name as string;
