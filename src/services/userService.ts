@@ -9,30 +9,37 @@ async function findUserByName(name: string) {
     return (user);
 }
 
-async function findAllUsers(){
+async function findAllUsers() {
     const Users = userRepository.getAllUsers();
     return Users;
 }
 
-async function createUser(user: UserInput){
-    const userNameExists = await userRepository.getUserByName(user.name);
+async function createUser(user: UserInput) {
+    const userNameExists = await userRepository.checkIfNameExists(user.name);
     if (userNameExists) throw duplicatedNameError();
     const newUser = userRepository.postUser(user);
     return newUser;
 }
 
-async function deleteUserFromDb(user: User){
-    const userExists = await userRepository.getUserByName(user.name);
+async function deleteUserFromDb(user: User) {
+    const userExists = await userRepository.checkIfNameExists(user.name);
     if (!userExists) throw notFoundError();
     const erasedUser = userRepository.deleteUser(user.name);
     return erasedUser;
 }
 
-async function updateUserInformation(user: User){
+async function updateUserInformation(user: User) {
     const userExists = userRepository.getUserById(user.id);
     if (!userExists) throw notFoundError();
     const updatedUser = userRepository.updateUser(user);
     return updatedUser;
+}
+
+async function returnTimesReadByName(name: string) {
+    const userExists = await userRepository.checkIfNameExists(name);
+    if (!userExists) throw notFoundError();
+    const timesRead = userRepository.getTimesReadByUserName(name);
+    return timesRead;
 }
 
 const userService = {
@@ -41,6 +48,7 @@ const userService = {
     createUser,
     deleteUserFromDb,
     updateUserInformation,
+    returnTimesReadByName,
 }
 
 export default userService;

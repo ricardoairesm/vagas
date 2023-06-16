@@ -1,21 +1,17 @@
 import { User, UserInput } from "../../types/users.ts";
 
-const fakeData = [
-    {
-        id: 1,
-        name: "João Oliveira",
-        job: "Desenvolvedor"
-    }
-]
-
-const fakeSession = [
-    {
-        userId:1,
-        token:'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxIn0.1ZBc33kR6QU2rjm2rqNe-Lba-qW0NAaXPh2MzKdLl1U',
-    }
-]
+import { fakeData, fakeCount } from "../../../fakeData.ts";
 
 async function getUserByName(name: string) {
+    const user = fakeData.find((user: User) => user.name === name);
+    if(user){
+       const count = fakeCount.find((count)=> count.userId === user.id);
+       count.timesRead++;
+    }
+    return (user);
+}
+
+async function checkIfNameExists(name: string) {
     const user = fakeData.find((user: User) => user.name === name);
     return (user);
 }
@@ -34,7 +30,12 @@ async function postUser(user: UserInput) {
         ...user,
         id: fakeData.length + 1,
     }
+    const newCount = {
+        userId:newUser.id,
+        timesRead:0,
+    }
     fakeData.push(newUser);
+    fakeCount.push(newCount);
     return (newUser);
 }
 
@@ -55,13 +56,21 @@ async function updateUser(updatedUserInformation: User) {
     return updatedUserInformation;
 }
 
+async function getTimesReadByUserName(name:string){
+    const user = fakeData.find((user)=> user.name === name);
+    const count = fakeCount.find((count)=> count.userId === user.id);
+    return(count);
+}
+
 const userRepository = {
     getUserByName,
     getUserById,
     getAllUsers,
+    checkIfNameExists,
     postUser,
     deleteUser,
     updateUser,
+    getTimesReadByUserName,
 }
 
 export default userRepository;

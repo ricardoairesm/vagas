@@ -47,16 +47,28 @@ export async function deleteUser(req: AuthenticatedRequest, res: Response, next:
     }
 };
 
-export async function updateUser(req: Request, res: Response, next: NextFunction) {
-    const id = req.query.id as string;
-    const updatedUserInformation = {...req.body,
-    id:Number(id),
+export async function updateUser(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    const id = Number(req.query.id) as number;
+    const updatedUserInformation = {
+    id:id,
+    name:req.body.name,
+    job:req.body.job,
     };
     try {
-        const updatedUser = await userService.updateUserInformation(updatedUserInformation)
+        const updatedUser = await userService.updateUserInformation(updatedUserInformation);
         return res.status(httpStatus.OK).send(updatedUser);
     } catch (error) {
         next(error);
     }
 };
+
+export async function getUserTimesReadCount(req:Request,res:Response,next:NextFunction){
+    const name = req.query.name as string;
+    try{
+        const timesRead = await userService.returnTimesReadByName(name);
+        return res.status(httpStatus.OK).send(timesRead);
+    }catch(error){
+        next(error);
+    }
+}
 
