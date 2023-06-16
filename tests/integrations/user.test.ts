@@ -109,3 +109,42 @@ describe('POST /users', () => {
         })
     })
 })
+
+describe('DELETE /users', () => {
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOnsidXNlcklkIjoxfSwiaWF0IjoxNjg2OTI1NDk5fQ.2LWm8PryPihocp1ycJlzbsc6XsHVEhEmOuRpWsuu_v0';
+    describe('When the user does not provide a auth token:', () => {
+        it('should respond with status 401', async () => {
+            const user1 = await createUser("Ricardo");
+            const response = await server.delete('/users?name=Ricardo');
+
+            expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+        })
+    })
+
+    describe('When the auth token is valid:', () => {
+        describe('When the name is not in use', () => {
+            it('should respond with status 404 and the user', async () => {
+                const user1 = await createUser("Ricardo");
+                const response = await server.delete('/users?name=Daniel').set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(httpStatus.NOT_FOUND);
+            })
+        });
+
+        describe('When the name is valid', () => {
+            it('should respond with status 200 and the deleted user', async () => {
+                const user1 = await createUser('Ricardo')
+                const response = await server.delete('/users?name=Ricardo').set('Authorization', `Bearer ${token}`);
+
+                expect(response.status).toBe(httpStatus.OK);
+                expect(response.body).toStrictEqual(
+                    {
+                        id: 1,
+                        name: "Ricardo",
+                        job: "Dev"
+                    }
+                )
+            })
+        })
+    })
+})
