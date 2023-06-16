@@ -77,7 +77,7 @@ describe('POST /users', () => {
     describe('When the body is valid:', () => {
 
         describe('When the name is already in use', () => {
-            it('should respond with status 409 and the user', async () => {
+            it('should respond with status 409', async () => {
                 const user1 = await createUser("Ricardo");
                 const body = {
                     name: "Ricardo",
@@ -144,6 +144,99 @@ describe('DELETE /users', () => {
                         job: "Dev"
                     }
                 )
+            })
+        })
+    })
+})
+
+describe('PUT /users', () => {
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOnsidXNlcklkIjoxfSwiaWF0IjoxNjg2OTI1NDk5fQ.2LWm8PryPihocp1ycJlzbsc6XsHVEhEmOuRpWsuu_v0';
+    describe('When the user does not provide an auth token:', () => {
+        it('should respond with status 401', async () => {
+            const user1 = await createUser("Ricardo");
+            const response = await server.put('/users?name=Ricardo');
+
+            expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+        })
+    })
+
+    describe('When the auth token is valid:', () => {
+
+        describe('When the id is not in use', () => {
+            it('should respond with status 404', async () => {
+                const user1 = await createUser("Ricardo");
+                const body = {
+                    name: "Rick",
+                    job: "Dev Full-Stack"
+                }
+                const response = await server.put('/users?id=400').set('Authorization', `Bearer ${token}`).send(body);
+
+                expect(response.status).toBe(httpStatus.NOT_FOUND);
+            })
+        });
+
+        describe('When the id is valid but the body is not', () => {
+            it('should respond with status 400', async () => {
+                const user1 = await createUser('Ricardo');
+                const body = {
+                    name: "Rick",
+                    trabalho: "Dev Full-Stack"
+                }
+                const response = await server.put('/users?id=1').set('Authorization', `Bearer ${token}`).send(body);
+
+                expect(response.status).toBe(400);
+            });
+        });
+
+        describe('When both the body and the id are valid', () => {
+            it('should respond with status 200 and the updated-infos', async () => {
+                const user1 = await createUser('Ricardo');
+                const body = {
+                    name: "Rick",
+                    job: "Dev Full-Stack"
+                }
+                const response = await server.put('/users?id=1').set('Authorization', `Bearer ${token}`).send(body);
+
+                expect(response.status).toBe(httpStatus.OK);
+                expect(response.body).toStrictEqual(
+                    {
+                        id: 1,
+                        name: "Rick",
+                        job: "Dev Full-Stack"
+                    }
+                )
+            });
+        })
+    });
+});
+
+describe('GET /users/access', () => {
+    describe('When the name is not beeing used:', () => {
+
+        it('should respond with status 404', async () => {
+            const user1 = await createUser("Ricardo");
+            const response = await server.get('/users/access?name=Daniel');
+
+            expect(response.status).toBe(httpStatus.NOT_FOUND);
+        })
+    })
+
+    describe('When the name is beeing used:', () => {
+
+        it('should respond with status 200 and the correct information', async () => {
+            const user1 = await createUser("Ricardo");
+            const randomNumber = Math.floor(Math.random() * 10) + 1;
+
+            for(let i =0;i<randomNumber;i++){
+                const read = await server.get('/user?name=Ricardo');
+            }
+
+            const response = await server.get('/users/access?name=Ricardo');
+
+            expect(response.status).toBe(httpStatus.OK);
+            expect(response.body).toStrictEqual({
+                timesRead:randomNumber,
+                userId:1
             })
         })
     })

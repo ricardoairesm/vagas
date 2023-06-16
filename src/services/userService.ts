@@ -29,16 +29,16 @@ async function deleteUserFromDb(user: User) {
 }
 
 async function updateUserInformation(user: User) {
-    const userExists = userRepository.getUserById(user.id);
+    const userExists = await userRepository.getUserById(user.id);
     if (!userExists) throw notFoundError();
-    const updatedUser = userRepository.updateUser(user);
+    const updatedUser = await userRepository.updateUser(user);
     return updatedUser;
 }
 
 async function returnTimesReadByName(name: string) {
     const userExists = await userRepository.checkIfNameExists(name);
     if (!userExists) throw notFoundError();
-    const timesRead = userRepository.getTimesReadByUserName(name);
+    const timesRead = await userRepository.getTimesReadByUserName(name);
     return timesRead;
 }
 
