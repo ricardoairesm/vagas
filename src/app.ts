@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.get("/user", getUserByName);
 app.get("/users", getAllUsers);
-app.post("/users", postUser);
+app.post("/users", validateBody(userSchema), postUser);
 app.delete('/users', authenticateToken, deleteUser);
 app.put("/users", authenticateToken, validateBody(userSchema), updateUser);
 app.get("/users/access", getUserTimesReadCount);
@@ -19,7 +19,4 @@ app.use(handleApplicationErrors);
 app.get('/sessions', sessionController);
 
 
-const port = 3000;
-app.listen(port, function () {
-  console.log('Express server listening on port ' + port);
-});
+export default app;
